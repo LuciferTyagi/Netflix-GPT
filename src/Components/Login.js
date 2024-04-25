@@ -1,6 +1,9 @@
 import React, { useRef, useState } from "react";
 import Header from "./Header";
 import { checkValidData } from "../Utils/Validate";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../Utils/Firebase";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
@@ -14,9 +17,48 @@ const Login = () => {
   };
 
   const handleButtonCLick = () => {
-    const message = checkValidData(email.current.value, password.current.value, name.current.value);
+    const message = checkValidData(
+      email.current.value,
+      password.current.value,
+      name.current.value
+    );
     setErrorMessage(message);
+    if (message) return;
+
+    if (!isSignInForm) {
+      //Sign-Up Logic
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage);
+        });
+    } else {
+      //Sign-In Logic
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage);
+        });
+    }
   };
+
   return (
     <div>
       <Header />
@@ -32,7 +74,8 @@ const Login = () => {
         </h2>
         <form
           onSubmit={(e) => e.preventDefault()}
-          className="mt-[25px] mx-0 mb-[60px] ">
+          className="mt-[25px] mx-0 mb-[60px] "
+        >
           {!isSignInForm && (
             <div className="form-control h-[50px] mb-[16px]">
               <input
