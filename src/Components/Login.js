@@ -4,13 +4,16 @@ import { checkValidData } from "../Utils/Validate";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../Utils/Firebase";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
+
   const email = useRef(null);
   const password = useRef(null);
-  const name = useRef(null);
+  // const name = useRef(null);
+  const navigate = useNavigate();
 
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
@@ -19,9 +22,10 @@ const Login = () => {
   const handleButtonCLick = () => {
     const message = checkValidData(
       email.current.value,
-      password.current.value,
-      name.current.value
+      password.current.value
+      // name.current.value
     );
+
     setErrorMessage(message);
     if (message) return;
 
@@ -35,6 +39,7 @@ const Login = () => {
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
+          navigate("/browse");
           // ...
         })
         .catch((error) => {
@@ -45,10 +50,15 @@ const Login = () => {
     } else {
       //Sign-In Logic
 
-      signInWithEmailAndPassword(auth, email, password)
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
+          navigate("/browse");
           // ...
         })
         .catch((error) => {
@@ -79,11 +89,11 @@ const Login = () => {
           {!isSignInForm && (
             <div className="form-control h-[50px] mb-[16px]">
               <input
-                ref={name}
+                // ref={name}
                 type="text"
                 placeholder="Full Name"
                 required
-                className="h-[100%] w-[100%] bg-[#333] outline-none border-none text-[1rem] rounded-[4px] py-0 px-[20px]"
+                className="h-[100%] text-white w-[100%] bg-[#333] outline-none border-none text-[1rem] rounded-[4px] py-0 px-[20px]"
               />
               {/* <label className='absolute left-[20px] top-[50%] text-[#8c8c8c] pointer-events-none text-[1rem] transform -translate-x-[50%]'>Full Name</label> */}
             </div>
@@ -95,7 +105,7 @@ const Login = () => {
               type="text"
               placeholder="Email-Address"
               required
-              className="h-[100%] w-[100%] bg-[#333] outline-none border-none text-[1rem] rounded-[4px] py-0 px-[20px]"
+              className="h-[100%] w-[100%] bg-[#333] outline-none border-none text-[1rem] rounded-[4px] py-0 px-[20px] text-white"
             />
             {/* <label className='absolute left-[20px] top-[50%] text-[#8c8c8c] pointer-events-none text-[1rem] transform -translate-x-[50%]'>Email or Phone</label> */}
           </div>
@@ -105,7 +115,7 @@ const Login = () => {
               ref={password}
               type="password"
               placeholder="Password"
-              className="h-[100%] w-[100%] bg-[#333] outline-none border-none text-[1rem] rounded-[4px] py-0 px-[20px]"
+              className="h-[100%] text-white w-[100%] bg-[#333] outline-none border-none text-[1rem] rounded-[4px] py-0 px-[20px]"
             />
             {/* <label className='absolute left-[20px] top-[50%] text-[#8c8c8c] pointer-events-none text-[1rem] transform -translate-x-[50%]' >Password</label> */}
           </div>
