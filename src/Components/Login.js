@@ -4,10 +4,9 @@ import { checkValidData } from "../Utils/Validate";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../Utils/Firebase";
-import { useNavigate } from "react-router-dom";
-import { current } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 import { addUser } from "../Utils/userSlice";
+import { USER_AVATAR } from "../Utils/constant";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
@@ -16,7 +15,7 @@ const Login = () => {
   const email = useRef(null);
   const password = useRef(null);
   const name = useRef(null);
-  const navigate = useNavigate();
+  
   const dispatch = useDispatch();
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
@@ -46,7 +45,7 @@ const Login = () => {
           updateProfile(user, {
             displayName: name.current.value,
             photoURL:
-              "https://avatars.githubusercontent.com/u/78792172?v=4",
+              USER_AVATAR,
           })
             .then(() => {
               const { uid, email, displayName, photoURL } = auth.currentUser;
@@ -58,7 +57,7 @@ const Login = () => {
                   photoURL: photoURL,
                 })
               );
-              navigate("/browse");
+     
             })
             .catch((error) => {
               // An error occurred
@@ -84,7 +83,7 @@ const Login = () => {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          navigate("/browse");
+         
           // ...
         })
         .catch((error) => {
