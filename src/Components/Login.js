@@ -6,7 +6,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../Utils/Firebase";
 import { useDispatch } from "react-redux";
 import { addUser } from "../Utils/userSlice";
-import { USER_AVATAR } from "../Utils/constant";
+import { BG_URL, USER_AVATAR } from "../Utils/constant";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
@@ -15,7 +15,7 @@ const Login = () => {
   const email = useRef(null);
   const password = useRef(null);
   const name = useRef(null);
-  
+
   const dispatch = useDispatch();
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
@@ -44,8 +44,7 @@ const Login = () => {
 
           updateProfile(user, {
             displayName: name.current.value,
-            photoURL:
-              USER_AVATAR,
+            photoURL: USER_AVATAR,
           })
             .then(() => {
               const { uid, email, displayName, photoURL } = auth.currentUser;
@@ -57,13 +56,12 @@ const Login = () => {
                   photoURL: photoURL,
                 })
               );
-     
             })
             .catch((error) => {
               // An error occurred
               // ...
               setErrorMessage(error.message);
-            }); 
+            });
 
           // ...
         })
@@ -83,7 +81,7 @@ const Login = () => {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-         
+
           // ...
         })
         .catch((error) => {
@@ -98,10 +96,7 @@ const Login = () => {
     <div>
       <Header />
       <div className="background-img absolute before:content-none left-0 top-0 w-[100%] h-[100%] bg-center">
-        <img
-          src="https://assets.nflxext.com/ffe/siteui/vlv3/9f46b569-aff7-4975-9b8e-3212e4637f16/453ba2a1-6138-4e3c-9a06-b66f9a2832e4/IN-en-20240415-popsignuptwoweeks-perspective_alpha_website_large.jpg"
-          alt="logo"
-        />
+        <img src={BG_URL} alt="logo" />
       </div>
       <div className="form-wrapper absolute left-[50%] top-[50%] transform -translate-x-[50%] -translate-y-[50%] bg-black opacity-75 p-[60px] rounded-[4px] w-[430px]">
         <h2 className="text-white text-[2rem]">
